@@ -15,9 +15,11 @@
  */
 package sample.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.util.Enumeration;
 
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId;
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient;
@@ -37,6 +42,7 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
  */
 @Controller
 public class AuthorizationController {
+
 	private final WebClient webClient;
 	private final String messagesBaseUri;
 
@@ -80,7 +86,7 @@ public class AuthorizationController {
 	}
 
 	@GetMapping(value = "/authorize", params = "grant_type=client_credentials")
-	public String clientCredentialsGrant(Model model) {
+	public String clientCredentialsGrant(Model model ) {
 
 		String[] messages = this.webClient
 				.get()
@@ -91,6 +97,27 @@ public class AuthorizationController {
 				.block();
 		model.addAttribute("messages", messages);
 
+		return "index";
+	}
+
+	@GetMapping(value = "/logout")
+	public String clientLogout(Model model,
+			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
+					OAuth2AuthorizedClient authorizedClient,
+			HttpServletRequest request,
+			HttpServletResponse response){
+		Enumeration<String> headerNames = request.getHeaderNames();
+		System.out.println("============================");
+		while(headerNames.hasMoreElements()){
+			String name = headerNames.nextElement();
+			System.out.println(name + " : " + request.getHeader(name));
+		}
+		System.out.println("============================");
+		System.out.println("AccessToken : " + authorizedClient.getAccessToken().getTokenValue() );
+		System.out.println("RefreshToken : " + authorizedClient.getRefreshToken().getTokenValue() );
+		System.out.println("============================");
+
+//		authorizedClient = new OAuth2AuthorizedClient(authorizedClient.getClientRegistration(),null, new OAuth2AccessToken(""));
 		return "index";
 	}
 }

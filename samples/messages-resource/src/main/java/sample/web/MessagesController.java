@@ -18,6 +18,10 @@ package sample.web;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
+
 /**
  * @author Joe Grandja
  * @since 0.0.1
@@ -26,7 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessagesController {
 
 	@GetMapping("/messages")
-	public String[] getMessages() {
+	public String[] getMessages(HttpServletRequest request, HttpServletResponse response) {
+		Enumeration<String> headerNames = request.getHeaderNames();
+		System.out.println("============================");
+		while(headerNames.hasMoreElements()){
+			String name = headerNames.nextElement();
+			System.out.println(name + " : " + request.getHeader(name));
+		}
+		System.out.println("============================");
 		return new String[] {"Message 1", "Message 2", "Message 3"};
 	}
 }
