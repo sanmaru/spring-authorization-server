@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * @author Joe Grandja
@@ -37,7 +38,14 @@ public class MessagesController {
 			String name = headerNames.nextElement();
 			System.out.println(name + " : " + request.getHeader(name));
 		}
-		System.out.println("============================");
 		return new String[] {"Message 1", "Message 2", "Message 3"};
+	}
+
+	// authorization 에서 로그아웃이 되어 있지 않으면 재요청으로 자동 로그인 된다.
+	// 관련하여 authorization 에서도 로그아웃 하도록 처리 한다.
+	// WebClient 에서 배열을 리턴 받고 있어 배열로 리턴 한다.
+	@GetMapping("/messages/logout")
+	public String[] logout() {
+		return new String[] {"redirect:http://auth-server:9000/logout"};
 	}
 }

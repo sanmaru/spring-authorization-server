@@ -46,9 +46,6 @@ public class SecurityConfig {
 			.oauth2Login(oauth2Login ->
 				oauth2Login.loginPage("/oauth2/authorization/messaging-client-oidc"))
 			.oauth2Client(withDefaults());
-		http.logout().clearAuthentication(true)
-				.clearAuthentication(true).logoutSuccessUrl("/")
-				.deleteCookies("JSESSIONID").permitAll();
 		return http.build();
 	}
 	// @formatter:on

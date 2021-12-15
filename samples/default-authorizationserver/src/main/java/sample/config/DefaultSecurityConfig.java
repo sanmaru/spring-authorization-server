@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -40,7 +41,9 @@ public class DefaultSecurityConfig {
 			.authorizeRequests(authorizeRequests ->
 				authorizeRequests.anyRequest().authenticated()
 			)
-			.formLogin(withDefaults());
+			.formLogin(withDefaults())
+			.logout()
+				.logoutSuccessUrl("http://127.0.0.1:8080/oauth2/authorization/messaging-client-oidc");
 		return http.build();
 	}
 	// @formatter:on
@@ -56,5 +59,6 @@ public class DefaultSecurityConfig {
 		return new InMemoryUserDetailsManager(user);
 	}
 	// @formatter:on
+
 
 }

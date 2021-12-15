@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="ko">
     <head>
         <title>Spring Security OAuth 2.0 Sample</title>
         <meta charset="utf-8" />
@@ -24,6 +24,11 @@
                 <h4 th:text="${error}" class="text-center"></h4>
             </div>
             <div class="panel panel-default">
+                <div class="list-group-item">
+                    <h3 class="panel-title">
+                        <a href="/logout" th:href="@{/logout}"> logout</a>
+                    </h3>
+                </div>
                 <div class="panel-heading">
                     <h3 class="panel-title">Authorize the client using <span style="font-family:monospace">grant_type</span>:</h3>
                 </div>

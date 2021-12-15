@@ -17,11 +17,14 @@ package sample.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -31,6 +34,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.Enumeration;
 
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId;
@@ -50,8 +54,12 @@ public class AuthorizationController {
 			@Value("${messages.base-uri}") String messagesBaseUri) {
 		this.webClient = webClient;
 		this.messagesBaseUri = messagesBaseUri;
+		System.out.println("++++++++++++++++++++++++++++++++++++");
+		System.out.println("messagesBaseUri : " + messagesBaseUri);
+		System.out.println("++++++++++++++++++++++++++++++++++++");
 	}
 
+	// scope 가 필요하다.
 	@GetMapping(value = "/authorize", params = "grant_type=authorization_code")
 	public String authorizationCodeGrant(Model model,
 			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
@@ -85,6 +93,7 @@ public class AuthorizationController {
 		return "index";
 	}
 
+	// scope 가 필요없다.
 	@GetMapping(value = "/authorize", params = "grant_type=client_credentials")
 	public String clientCredentialsGrant(Model model ) {
 
@@ -100,24 +109,44 @@ public class AuthorizationController {
 		return "index";
 	}
 
-	@GetMapping(value = "/logout")
-	public String clientLogout(Model model,
-			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
-					OAuth2AuthorizedClient authorizedClient,
+	@GetMapping(value="/logout")
+	public String clientLogout(
 			HttpServletRequest request,
 			HttpServletResponse response){
-		Enumeration<String> headerNames = request.getHeaderNames();
-		System.out.println("============================");
-		while(headerNames.hasMoreElements()){
-			String name = headerNames.nextElement();
-			System.out.println(name + " : " + request.getHeader(name));
-		}
-		System.out.println("============================");
-		System.out.println("AccessToken : " + authorizedClient.getAccessToken().getTokenValue() );
-		System.out.println("RefreshToken : " + authorizedClient.getRefreshToken().getTokenValue() );
-		System.out.println("============================");
+//			Scope 가 필요할 경우 추가
+//			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
+//			OAuth2AuthorizedClient authorizedClient){
 
-//		authorizedClient = new OAuth2AuthorizedClient(authorizedClient.getClientRegistration(),null, new OAuth2AccessToken(""));
-		return "index";
+
+		String[] messages = this.webClient
+				.get()
+				.uri(this.messagesBaseUri+"/logout")
+//				.attributes(oauth2AuthorizedClient(authorizedClient))
+				.attributes(clientRegistrationId("messaging-client-client-credentials"))
+				.retrieve()
+				.bodyToMono(String[].class)
+				.block();
+
+
+		/*
+		String[] messages2 = this.webClient
+				.get()
+				.uri(this.messagesBaseUri+"/logout")
+				.attributes(clientRegistrationId("messaging-client-client-credentials"))
+				.retrieve()
+				.bodyToMono(String[].class)
+				.block();
+
+		 */
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if( authentication != null && authentication.isAuthenticated() ){
+			new SecurityContextLogoutHandler().logout(request, response, authentication);
+			new SecurityContextLogoutHandler().setClearAuthentication(true);
+			new SecurityContextLogoutHandler().setInvalidateHttpSession(true);
+		}
+
+		return messages[0];
+//		return "redirect:/";
 	}
+
 }
