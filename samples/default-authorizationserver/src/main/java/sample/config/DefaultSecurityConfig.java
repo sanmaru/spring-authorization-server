@@ -43,7 +43,8 @@ public class DefaultSecurityConfig {
 			)
 			.formLogin(withDefaults())
 			.logout()
-				.logoutSuccessUrl("http://127.0.0.1:8080/oauth2/authorization/messaging-client-oidc");
+//				.logoutSuccessUrl("http://127.0.0.1:8080/oauth2/authorization/messaging-client-oidc");
+				.logoutSuccessUrl("http://127.0.0.1:8080/");
 		return http.build();
 	}
 	// @formatter:on

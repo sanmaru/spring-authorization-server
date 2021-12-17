@@ -15,6 +15,8 @@
  */
 package sample.web;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,13 +33,17 @@ import java.util.Hashtable;
 public class MessagesController {
 
 	@GetMapping("/messages")
-	public String[] getMessages(HttpServletRequest request, HttpServletResponse response) {
+	public String[] getMessages(
+			@AuthenticationPrincipal Jwt jwt
+			, HttpServletRequest request
+			, HttpServletResponse response) {
 		Enumeration<String> headerNames = request.getHeaderNames();
 		System.out.println("============================");
 		while(headerNames.hasMoreElements()){
 			String name = headerNames.nextElement();
 			System.out.println(name + " : " + request.getHeader(name));
 		}
+		System.out.println(" jwt.getTokenValue() : " + jwt.getTokenValue() );
 		return new String[] {"Message 1", "Message 2", "Message 3"};
 	}
 

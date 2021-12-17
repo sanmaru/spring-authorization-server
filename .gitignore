@@ -6,8 +6,11 @@ build/
 bin/
 classes/
 target/
+logs
+logs/**
 *.log
 *.log.*
+*.log.gz
 
 ### STS ###
 .apt_generated

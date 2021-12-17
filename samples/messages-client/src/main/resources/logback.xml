@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration >
+	<property name="LOG_DIR" value="logs"/>
+	<property name="LOG_FILE_NAME" value="sanmaru.log"/>
+	<property name="ERR_LOG_FILE_NAME" value="sanmaru.err"/>
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender" >
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--pattern>%d{yy-MM-dd HH:mm:ss.SSS} [%-10thread] [%highlight(%-5level)] [%cyan(%-40logger{40}:%-4line)] - %msg%n</pattern-->
+			<pattern>%d{yy-MM-dd HH:mm:ss.SSS} [%highlight(%-5level)] [%25thread] [%cyan(%-50.50logger{40}):%4line] - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--파일에 로그를 남깁니다.-->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/${LOG_FILE_NAME}</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yy-MM-dd HH:mm:ss.SSS} [%-5level] [%15thread] [%-50.50logger{40}:%4line] - %msg%n</pattern>
+			<!--Pattern>
+				%d{yy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{36}:%line - %msg%n
+			</Pattern-->
+			<charset>UTF-8</charset>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/history/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>10MB</maxFileSize>
+				<!-- kb, mb, gb -->
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+	</appender>
+	<!--    <logger level="DEBUG">-->
+	<!--        <appender-ref ref="CONSOLE" />-->
+	<!--    </logger>-->
+	<root>
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>
