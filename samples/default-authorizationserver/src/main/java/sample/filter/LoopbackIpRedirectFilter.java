@@ -27,8 +27,8 @@ public class LoopbackIpRedirectFilter extends OncePerRequestFilter {
         logger.info("================LoopbackIpRedirectFilter : "
                 + request.getMethod() + " "
                 + request.getRequestURI()
-                + ( request.getQueryString() != null ? "?" + request.getQueryString() : "" ));
-        CsrfToken token = new HttpSessionCsrfTokenRepository().loadToken(request);
+                + ( request.getQueryString() != null ? "?" + request.getQueryString() : "" )
+				+ ( request.getParameter("code") != null ? "?PostCode : " + request.getParameter("code") : "" ));
         filterChain.doFilter(request, response);
     }
 
