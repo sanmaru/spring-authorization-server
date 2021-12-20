@@ -15,6 +15,8 @@
  */
 package sample.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import sample.jose.Jwks;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -33,6 +36,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
  */
 @EnableWebSecurity
 public class DefaultSecurityConfig {
+
+	final static Logger logger = LoggerFactory.getLogger(DefaultSecurityConfig.class);
 
 	// @formatter:off
 	@Bean

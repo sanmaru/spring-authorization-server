@@ -15,10 +15,13 @@
  */
 package sample.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import sample.filter.LoopbackIpRedirectFilter;
 
 /**
  * @author Joe Grandja
@@ -26,6 +29,8 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @EnableWebSecurity
 public class ResourceServerConfig {
+
+	final static Logger logger = LoggerFactory.getLogger(ResourceServerConfig.class);
 
 	// @formatter:off
 	@Bean

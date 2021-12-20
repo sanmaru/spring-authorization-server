@@ -15,6 +15,8 @@
  */
 package sample.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -32,6 +34,8 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 public class WebClientConfig {
+
+	final static Logger logger = LoggerFactory.getLogger(WebClientConfig.class);
 
 	@Bean
 	WebClient webClient(OAuth2AuthorizedClientManager authorizedClientManager) {

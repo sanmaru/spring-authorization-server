@@ -15,8 +15,11 @@
  */
 package sample.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import sample.MessagesClientApplication;
 
 /**
  * @author Joe Grandja
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class DefaultController {
+
+	final static Logger logger = LoggerFactory.getLogger(DefaultController.class);
 
 	@GetMapping("/")
 	public String root() {

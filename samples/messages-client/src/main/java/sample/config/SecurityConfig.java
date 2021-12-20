@@ -15,12 +15,15 @@
  */
 package sample.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import sample.web.AuthorizationController;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -30,6 +33,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
  */
 @EnableWebSecurity
 public class SecurityConfig {
+
+	final static Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {

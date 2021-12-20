@@ -15,6 +15,10 @@
  */
 package sample.jose;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sample.DefaultAuthorizationServerApplication;
+
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -31,6 +35,8 @@ import javax.crypto.SecretKey;
  * @since 0.1.0
  */
 final class KeyGeneratorUtils {
+
+	final static Logger logger = LoggerFactory.getLogger(KeyGeneratorUtils.class);
 
 	private KeyGeneratorUtils() {
 	}

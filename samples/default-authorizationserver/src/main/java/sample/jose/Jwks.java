@@ -28,12 +28,16 @@ import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Joe Grandja
  * @since 0.1.0
  */
 public final class Jwks {
+
+	final static Logger logger = LoggerFactory.getLogger(Jwks.class);
 
 	private Jwks() {
 	}

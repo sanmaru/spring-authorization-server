@@ -15,10 +15,13 @@
  */
 package sample.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sample.MessagesResourceApplication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +34,8 @@ import java.util.Hashtable;
  */
 @RestController
 public class MessagesController {
+
+	final static Logger logger = LoggerFactory.getLogger(MessagesController.class);
 
 	@GetMapping("/messages")
 	public String[] getMessages(

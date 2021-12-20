@@ -21,6 +21,8 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sample.jose.Jwks;
 
 import org.springframework.context.annotation.Bean;
@@ -54,6 +56,8 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
+
+	final static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfig.class);
 
 	@Bean
 	@Order(Ordered.HIGHEST_PRECEDENCE)

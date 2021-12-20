@@ -15,6 +15,8 @@
  */
 package sample.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -46,6 +48,8 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
  */
 @Controller
 public class AuthorizationController {
+
+	final static Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
 	private final WebClient webClient;
 	private final String messagesBaseUri;
