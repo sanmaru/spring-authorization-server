@@ -25,8 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import sample.jose.Jwks;
+import sample.multifactor.MultiFactorAuthenticationSuccessHandler;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -42,11 +41,19 @@ public class DefaultSecurityConfig {
 	// @formatter:off
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+		MultiFactorAuthenticationSuccessHandler multiFactorAuthenticationHandler = new MultiFactorAuthenticationSuccessHandler();
+
 		http
 			.authorizeRequests(authorizeRequests ->
-				authorizeRequests.anyRequest().authenticated()
+				authorizeRequests
+						.antMatchers("/login/multifactor").hasAuthority("ROLE_TOTP")
+						.antMatchers("/login","/login/**").permitAll()
+						.anyRequest().authenticated()
 			)
 			.formLogin(withDefaults())
+			.formLogin( (form) -> form
+					.successHandler(multiFactorAuthenticationHandler)
+			)
 			.logout()
 //				.logoutSuccessUrl("http://127.0.0.1:8080/oauth2/authorization/messaging-client-oidc");
 				.logoutSuccessUrl("http://127.0.0.1:8080/");
@@ -58,9 +65,10 @@ public class DefaultSecurityConfig {
 	@Bean
 	UserDetailsService users() {
 		UserDetails user = User.withDefaultPasswordEncoder()
-				.username("user1")
+				.username("user")
 				.password("password")
 				.roles("USER")
+				.roles("TOTP")
 				.build();
 		return new InMemoryUserDetailsManager(user);
 	}
