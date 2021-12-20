@@ -23,6 +23,10 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import sample.jose.Jwks;
 
 import org.springframework.context.annotation.Bean;
@@ -49,6 +53,8 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 /**
  * @author Joe Grandja
@@ -114,6 +120,31 @@ public class AuthorizationServerConfig {
 		return ProviderSettings.builder().issuer("http://auth-server:9000").build();
 	}
 
+	/*
+	@Bean
+	public UserDetailsManager users(DataSource dataSource) {
+		JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+		if (!users.userExists("user")) {
+			UserDetails user = User.builder()
+					.username("user")
+					.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+					.roles("USER", "TOTP")
+					.build();
+			users.createUser(user);
+		}
+
+		if (!users.userExists("admin")) {
+			UserDetails admin = User.builder()
+					.username("admin")
+					.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+					.roles("USER", "ADMIN", "TOTP")
+					.build();
+			users.createUser(admin);
+		}
+		return users;
+	}
+	*/
+
 	@Bean
 	public EmbeddedDatabase embeddedDatabase() {
 		// @formatter:off
@@ -121,11 +152,30 @@ public class AuthorizationServerConfig {
 				.generateUniqueName(true)
 				.setType(EmbeddedDatabaseType.H2)
 				.setScriptEncoding("UTF-8")
-				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
-				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
-				.addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
+				.addScript("oauth2-authorization-schema.sql")
+				.addScript("oauth2-authorization-consent-schema.sql")
+				.addScript("oauth2-registered-client-schema.sql")
+//				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
+//				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
+//				.addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
 				.build();
 		// @formatter:on
 	}
+
+
+	/*
+	@Bean
+	DataSource dataSource() {
+		return new EmbeddedDatabaseBuilder()
+				.generateUniqueName(true)
+				.setType(EmbeddedDatabaseType.H2)
+				.setScriptEncoding("UTF-8")
+				.addScript("oauth2-authorization-schema.sql")
+				.addScript("oauth2-authorization-consent-schema.sql")
+				.addScript("oauth2-registered-client-schema.sql")
+				.build();
+	}
+
+	 */
 
 }
