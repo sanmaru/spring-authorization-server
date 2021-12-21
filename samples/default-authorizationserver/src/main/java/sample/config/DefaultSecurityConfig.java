@@ -20,12 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import sample.multifactor.MultiFactorAuthenticationSuccessHandler;
 
@@ -50,7 +44,7 @@ public class DefaultSecurityConfig {
 		http
 			.authorizeRequests(authorizeRequests ->
 				authorizeRequests
-						.antMatchers("/login/multifactor").hasAuthority("ROLE_TOTP")
+						.antMatchers("/login/multifactor").hasAuthority("ROLE_USER")
 						.antMatchers("/login","/login/**").permitAll()
 						.anyRequest().authenticated()
 			)
@@ -65,34 +59,7 @@ public class DefaultSecurityConfig {
 	}
 	// @formatter:on
 
-	// @formatter:off
 
-	@Bean
-	UserDetailsService users() {
-		UserDetails user = User.withDefaultPasswordEncoder()
-				.username("user")
-				.password("password")
-				.roles("USER")
-				.roles("TOTP")
-				.build();
-		return new InMemoryUserDetailsManager(user);
-	}
-
-	/*
-	@Bean
-	UserDetailsService users(DataSource dataSource) {
-		UserDetails user = User.builder().username("user")
-				.password("{bcrypt}$2a$10$AiyMWI4UBLozgXq6itzyVuxrtofjcPzn/WS3fOrcqgzdax9jB7Io.").roles("USER").build();
-		UserDetails admin = User.builder().username("admin")
-				.password("{bcrypt}$2a$10$AiyMWI4UBLozgXq6itzyVuxrtofjcPzn/WS3fOrcqgzdax9jB7Io.").roles("USER", "ADMIN")
-				.build();
-		JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-		users.createUser(user);
-		users.createUser(admin);
-		return users;
-	}
-
-	 */
 	// @formatter:on
 
 

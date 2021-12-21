@@ -3,6 +3,9 @@ apply plugin: 'io.spring.convention.spring-sample-boot'
 dependencies {
 //	implementation "org.springframework.security:spring-security-config"
 //	implementation "org.springframework.security:spring-security-web"
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.oracle.database.jdbc:ojdbc8'
+//	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.7.Final'
 
 	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'

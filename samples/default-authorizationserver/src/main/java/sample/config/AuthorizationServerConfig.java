@@ -34,9 +34,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -65,9 +62,12 @@ public class AuthorizationServerConfig {
 
 	final static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfig.class);
 
+//	CustomUserRepositoryUserDetailsService customUserRepositoryUserDetailsService;
+
 	@Bean
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+//		http.userDetailsService(customUserRepositoryUserDetailsService);
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 		return http.formLogin(Customizer.withDefaults()).build();
 	}
@@ -120,15 +120,16 @@ public class AuthorizationServerConfig {
 		return ProviderSettings.builder().issuer("http://auth-server:9000").build();
 	}
 
-	/*
+
 	@Bean
 	public UserDetailsManager users(DataSource dataSource) {
 		JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+		// @formatter:off
 		if (!users.userExists("user")) {
 			UserDetails user = User.builder()
 					.username("user")
 					.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-					.roles("USER", "TOTP")
+					.roles("USER")
 					.build();
 			users.createUser(user);
 		}
@@ -137,45 +138,13 @@ public class AuthorizationServerConfig {
 			UserDetails admin = User.builder()
 					.username("admin")
 					.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-					.roles("USER", "ADMIN", "TOTP")
+					.roles("USER", "ADMIN")
 					.build();
 			users.createUser(admin);
 		}
+		// @formatter:on
 		return users;
 	}
-	*/
 
-	@Bean
-	public EmbeddedDatabase embeddedDatabase() {
-		// @formatter:off
-		return new EmbeddedDatabaseBuilder()
-				.generateUniqueName(true)
-				.setType(EmbeddedDatabaseType.H2)
-				.setScriptEncoding("UTF-8")
-				.addScript("oauth2-authorization-schema.sql")
-				.addScript("oauth2-authorization-consent-schema.sql")
-				.addScript("oauth2-registered-client-schema.sql")
-//				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
-//				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
-//				.addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
-				.build();
-		// @formatter:on
-	}
-
-
-	/*
-	@Bean
-	DataSource dataSource() {
-		return new EmbeddedDatabaseBuilder()
-				.generateUniqueName(true)
-				.setType(EmbeddedDatabaseType.H2)
-				.setScriptEncoding("UTF-8")
-				.addScript("oauth2-authorization-schema.sql")
-				.addScript("oauth2-authorization-consent-schema.sql")
-				.addScript("oauth2-registered-client-schema.sql")
-				.build();
-	}
-
-	 */
 
 }

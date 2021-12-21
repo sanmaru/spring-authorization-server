@@ -33,12 +33,10 @@ public class MultiFactorController {
 	}
 
 	@PostMapping( value="/login/multifactor")
-	public String PostMultifactor(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String PostMultifactor(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("PostMultifactor");
 		HttpSession session = request.getSession();
 		logger.info( "referer : " + session.getAttribute("referer") );
-//		logger.info("==== MultiFactorAuthenticationHandler : " + );
-//		response.sendRedirect("/login/multifactor");
-		return "redirect:"+session.getAttribute("referer");
+		return "redirect:"+ (session.getAttribute("referer")!=null?session.getAttribute("referer"):"/");
 	}
 }
