@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="ko">
+    <head>
+        <title>Spring Security OAuth 2.0 Sample</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
+    </head>
+    <body>
+        <!-- https://getbootstrap.com/ -->
+        <div th:fragment="header">
+            <nav class="navbar navbar-default">
+                <div class="list-group-item " sec:authorize="isAuthenticated()">
+                    <button type="button" class="btn btn-outline-primary">서비스1</button>
+                    <button type="button" class="btn btn-primary">서비스2</button>
+                </div>
+                <div class="list-group-item " sec:authorize="isAnonymous()">
+                    <button type="button" class="btn btn-outline-primary">Login</button>
+                    <button type="button" class="btn btn-primary">Sign-up</button>
+                </div>
+            </nav>
+        </div>
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="list-group-item" sec:authorize="isAuthenticated()">
+                    <h3 class="panel-title">
+                        로그인 사용자입니다.
+                    </h3>
+                </div>
+                <div class="list-group-item" sec:authorize="isAnonymous()">
+                    <h3 class="panel-title">
+                        비로그인 사용자 입니다.
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script src="/webjars/bootstrap/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    </body>
+</html>

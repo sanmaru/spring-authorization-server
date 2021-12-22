@@ -23,8 +23,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import sample.multifactor.MultiFactorAuthenticationSuccessHandler;
 
-import javax.sql.DataSource;
-
 import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
@@ -40,7 +38,6 @@ public class DefaultSecurityConfig {
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		MultiFactorAuthenticationSuccessHandler multiFactorAuthenticationHandler = new MultiFactorAuthenticationSuccessHandler();
-
 		http
 			.authorizeRequests(authorizeRequests ->
 				authorizeRequests
@@ -58,9 +55,5 @@ public class DefaultSecurityConfig {
 		return http.build();
 	}
 	// @formatter:on
-
-
-	// @formatter:on
-
 
 }

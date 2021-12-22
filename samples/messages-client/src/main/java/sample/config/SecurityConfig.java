@@ -46,7 +46,9 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests(authorizeRequests ->
-				authorizeRequests.anyRequest().authenticated()
+				authorizeRequests
+						.mvcMatchers("/subscription").permitAll()
+						.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2Login ->
 				oauth2Login.loginPage("/oauth2/authorization/messaging-client-oidc"))

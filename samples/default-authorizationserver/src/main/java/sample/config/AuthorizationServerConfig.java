@@ -62,12 +62,9 @@ public class AuthorizationServerConfig {
 
 	final static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfig.class);
 
-//	CustomUserRepositoryUserDetailsService customUserRepositoryUserDetailsService;
-
 	@Bean
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-//		http.userDetailsService(customUserRepositoryUserDetailsService);
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 		return http.formLogin(Customizer.withDefaults()).build();
 	}
@@ -145,6 +142,4 @@ public class AuthorizationServerConfig {
 		// @formatter:on
 		return users;
 	}
-
-
 }

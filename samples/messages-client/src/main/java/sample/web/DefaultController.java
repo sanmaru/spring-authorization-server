@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import sample.MessagesClientApplication;
 
 /**
  * @author Joe Grandja
@@ -39,4 +38,7 @@ public class DefaultController {
 	public String index() {
 		return "index";
 	}
+
+	@GetMapping("/subscription")
+	public String subscription(){ return "subscription"; }
 }

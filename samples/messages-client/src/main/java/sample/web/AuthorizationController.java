@@ -58,9 +58,6 @@ public class AuthorizationController {
 			@Value("${messages.base-uri}") String messagesBaseUri) {
 		this.webClient = webClient;
 		this.messagesBaseUri = messagesBaseUri;
-		System.out.println("++++++++++++++++++++++++++++++++++++");
-		System.out.println("messagesBaseUri : " + messagesBaseUri);
-		System.out.println("++++++++++++++++++++++++++++++++++++");
 	}
 
 	// scope 가 필요하다.
@@ -99,7 +96,11 @@ public class AuthorizationController {
 
 	// scope 가 필요없다.
 	@GetMapping(value = "/authorize", params = "grant_type=client_credentials")
-	public String clientCredentialsGrant(Model model ) {
+	public String clientCredentialsGrant(Model model,
+			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
+					OAuth2AuthorizedClient authorizedClient,
+			@RegisteredOAuth2AuthorizedClient("messaging-client-client-credentials")
+					OAuth2AuthorizedClient authorizedClient2) {
 
 		String[] messages = this.webClient
 				.get()
@@ -109,7 +110,13 @@ public class AuthorizationController {
 				.bodyToMono(String[].class)
 				.block();
 		model.addAttribute("messages", messages);
-
+		logger.info("authorization-code : getAccessToken : " + authorizedClient.getAccessToken().getTokenValue());
+		logger.info("authorization-code : getAccessToken.getExpiresAt : " + authorizedClient.getAccessToken().getExpiresAt());
+		logger.info("authorization-code : getRefreshToken : " + authorizedClient.getRefreshToken().getTokenValue());
+		logger.info("authorization-code : getPrincipalName : " + authorizedClient.getPrincipalName());
+		logger.info("client-credentials : getAccessToken : " + authorizedClient2.getAccessToken().getTokenValue());
+		logger.info("client-credentials : getAccessToken.getExpiresAt : " + authorizedClient2.getAccessToken().getExpiresAt());
+		logger.info("client-credentials : getPrincipalName : " + authorizedClient2.getPrincipalName());
 		return "index";
 	}
 
@@ -125,23 +132,11 @@ public class AuthorizationController {
 		String[] messages = this.webClient
 				.get()
 				.uri(this.messagesBaseUri+"/logout")
-//				.attributes(oauth2AuthorizedClient(authorizedClient))
 				.attributes(clientRegistrationId("messaging-client-client-credentials"))
 				.retrieve()
 				.bodyToMono(String[].class)
 				.block();
 
-
-		/*
-		String[] messages2 = this.webClient
-				.get()
-				.uri(this.messagesBaseUri+"/logout")
-				.attributes(clientRegistrationId("messaging-client-client-credentials"))
-				.retrieve()
-				.bodyToMono(String[].class)
-				.block();
-
-		 */
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if( authentication != null && authentication.isAuthenticated() ){
 			new SecurityContextLogoutHandler().logout(request, response, authentication);
