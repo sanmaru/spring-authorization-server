@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="ko">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="ko">
     <head>
         <title>Spring Security OAuth 2.0 Sample</title>
         <meta charset="utf-8" />
@@ -18,6 +20,10 @@
                 <div class="list-group-item " sec:authorize="isAnonymous()">
                     <button type="button" class="btn btn-outline-primary">Login</button>
                     <button type="button" class="btn btn-primary">Sign-up</button>
+                </div>
+                <div class="list-group-item " sec:authorize="hasRole('ROLE_USER')">
+                    ROLE_USER
+                    <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
                 </div>
             </nav>
         </div>

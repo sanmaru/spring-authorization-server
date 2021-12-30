@@ -78,10 +78,13 @@ public final class TokenSettings extends AbstractSettings {
 	 * @return the {@link Builder}
 	 */
 	public static Builder builder() {
+		System.out.println("===== TokenSettings ======");
+		System.out.println("===== TokenSettings ======");
+		System.out.println("===== TokenSettings ======");
 		return new Builder()
-				.accessTokenTimeToLive(Duration.ofMinutes(5))
+				.accessTokenTimeToLive(Duration.ofMinutes(10))
 				.reuseRefreshTokens(true)
-				.refreshTokenTimeToLive(Duration.ofMinutes(60))
+				.refreshTokenTimeToLive(Duration.ofMinutes(360))
 				.idTokenSignatureAlgorithm(SignatureAlgorithm.RS256);
 	}
 

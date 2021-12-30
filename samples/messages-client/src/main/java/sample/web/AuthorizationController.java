@@ -65,7 +65,7 @@ public class AuthorizationController {
 	public String authorizationCodeGrant(Model model,
 			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
 					OAuth2AuthorizedClient authorizedClient) {
-
+		authorizedClient.getAccessToken().getScopes();
 		String[] messages = this.webClient
 				.get()
 				.uri(this.messagesBaseUri)
@@ -73,6 +73,7 @@ public class AuthorizationController {
 				.retrieve()
 				.bodyToMono(String[].class)
 				.block();
+
 		model.addAttribute("messages", messages);
 
 		return "index";
@@ -96,11 +97,7 @@ public class AuthorizationController {
 
 	// scope 가 필요없다.
 	@GetMapping(value = "/authorize", params = "grant_type=client_credentials")
-	public String clientCredentialsGrant(Model model,
-			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
-					OAuth2AuthorizedClient authorizedClient,
-			@RegisteredOAuth2AuthorizedClient("messaging-client-client-credentials")
-					OAuth2AuthorizedClient authorizedClient2) {
+	public String clientCredentialsGrant(Model model) {
 
 		String[] messages = this.webClient
 				.get()
@@ -110,13 +107,13 @@ public class AuthorizationController {
 				.bodyToMono(String[].class)
 				.block();
 		model.addAttribute("messages", messages);
-		logger.info("authorization-code : getAccessToken : " + authorizedClient.getAccessToken().getTokenValue());
-		logger.info("authorization-code : getAccessToken.getExpiresAt : " + authorizedClient.getAccessToken().getExpiresAt());
-		logger.info("authorization-code : getRefreshToken : " + authorizedClient.getRefreshToken().getTokenValue());
-		logger.info("authorization-code : getPrincipalName : " + authorizedClient.getPrincipalName());
-		logger.info("client-credentials : getAccessToken : " + authorizedClient2.getAccessToken().getTokenValue());
-		logger.info("client-credentials : getAccessToken.getExpiresAt : " + authorizedClient2.getAccessToken().getExpiresAt());
-		logger.info("client-credentials : getPrincipalName : " + authorizedClient2.getPrincipalName());
+//		logger.info("authorization-code : getAccessToken : " + authorizedClient.getAccessToken().getTokenValue());
+//		logger.info("authorization-code : getAccessToken.getExpiresAt : " + authorizedClient.getAccessToken().getExpiresAt());
+//		logger.info("authorization-code : getRefreshToken : " + authorizedClient.getRefreshToken().getTokenValue());
+//		logger.info("authorization-code : getPrincipalName : " + authorizedClient.getPrincipalName());
+//		logger.info("client-credentials : getAccessToken : " + authorizedClient2.getAccessToken().getTokenValue());
+//		logger.info("client-credentials : getAccessToken.getExpiresAt : " + authorizedClient2.getAccessToken().getExpiresAt());
+//		logger.info("client-credentials : getPrincipalName : " + authorizedClient2.getPrincipalName());
 		return "index";
 	}
 

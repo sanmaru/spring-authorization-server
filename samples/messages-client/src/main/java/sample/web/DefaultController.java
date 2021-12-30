@@ -17,8 +17,18 @@ package sample.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.security.Principal;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * @author Joe Grandja
@@ -40,5 +50,11 @@ public class DefaultController {
 	}
 
 	@GetMapping("/subscription")
-	public String subscription(){ return "subscription"; }
+	public String subscription(
+			@RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code")
+			OAuth2AuthorizedClient authorizedClient,
+			Authentication authentication){
+		logger.info(authorizedClient.getAccessToken().getScopes().stream().map(Object::toString).collect(joining(", ")));
+		return "subscription";
+	}
 }

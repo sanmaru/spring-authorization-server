@@ -18,6 +18,7 @@ package org.springframework.security.oauth2.server.authorization.authentication;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -63,9 +64,16 @@ final class JwtUtils {
 				.issuedAt(issuedAt)
 				.expiresAt(expiresAt)
 				.notBefore(issuedAt);
+
 		if (!CollectionUtils.isEmpty(authorizedScopes)) {
-			claimsBuilder.claim(OAuth2ParameterNames.SCOPE, authorizedScopes);
+			Set<String> _authorizedScopes = new HashSet<String>();
+			_authorizedScopes.addAll(authorizedScopes);
+			_authorizedScopes.add("ROLE_ADMIN");
+			claimsBuilder.claim(OAuth2ParameterNames.SCOPE, _authorizedScopes);
 		}
+		System.out.println("jwtUtils =======");
+		System.out.println(authorizedScopes);
+		System.out.println("jwtUtils =======");
 		// @formatter:on
 
 		return claimsBuilder;

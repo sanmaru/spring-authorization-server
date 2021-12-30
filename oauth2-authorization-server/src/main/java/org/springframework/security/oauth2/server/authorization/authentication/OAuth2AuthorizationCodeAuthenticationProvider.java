@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -168,8 +169,15 @@ public final class OAuth2AuthorizationCodeAuthenticationProvider implements Auth
 		}
 
 		String issuer = this.providerSettings != null ? this.providerSettings.getIssuer() : null;
+
 		Set<String> authorizedScopes = authorization.getAttribute(
 				OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME);
+
+		System.out.println("AuthenticationProvider.java ==========");
+		System.out.println("authorization.getAuthorizationGrantType().getValue() : " + authorization.getAuthorizationGrantType().getValue());
+		System.out.println("authorization.getAuthorizationGrantType().getValue() : " + authorization.getAttributes());
+		System.out.println(authorizedScopes.stream().map(Object::toString).collect(Collectors.joining(", ")));
+		System.out.println("AuthenticationProvider.java ==========");
 
 		JoseHeader.Builder headersBuilder = JwtUtils.headers();
 		JwtClaimsSet.Builder claimsBuilder = JwtUtils.accessTokenClaims(

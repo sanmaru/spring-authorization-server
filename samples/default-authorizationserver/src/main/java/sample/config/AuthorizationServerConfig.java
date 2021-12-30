@@ -23,10 +23,12 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import sample.jose.Jwks;
 
 import org.springframework.context.annotation.Bean;
@@ -60,12 +62,30 @@ import javax.sql.DataSource;
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
 
+	private static final String CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent";
+
 	final static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfig.class);
 
 	@Bean
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+//		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+		OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer =
+				new OAuth2AuthorizationServerConfigurer<>();
+		authorizationServerConfigurer
+				.authorizationEndpoint(authorizationEndpoint ->
+						authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI));
+
+		RequestMatcher endpointsMatcher = authorizationServerConfigurer
+				.getEndpointsMatcher();
+
+		http
+				.requestMatcher(endpointsMatcher)
+				.authorizeRequests(authorizeRequests ->
+						authorizeRequests.anyRequest().authenticated()
+				)
+				.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
+				.apply(authorizationServerConfigurer);
 		return http.formLogin(Customizer.withDefaults()).build();
 	}
 
@@ -82,8 +102,16 @@ public class AuthorizationServerConfig {
 				.redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
 				.redirectUri("http://127.0.0.1:8080/authorized")
 				.scope(OidcScopes.OPENID)
-				.scope("message.read")
-				.scope("message.write")
+				.scopes(scopes -> {
+					scopes.clear();
+					scopes.add(OidcScopes.OPENID);
+					scopes.add(OidcScopes.EMAIL);
+					scopes.add("message.read");
+					scopes.add("message.write");
+					scopes.add("message.search");
+				})
+//				.scope("message.read")
+//				.scope("message.write")
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
 				.build();
 
