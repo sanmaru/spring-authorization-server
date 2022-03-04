@@ -56,7 +56,13 @@ public class MessagesController {
 	// 관련하여 authorization 에서도 로그아웃 하도록 처리 한다.
 	// WebClient 에서 배열을 리턴 받고 있어 배열로 리턴 한다.
 	@GetMapping("/messages/logout")
+//	public String[] logout() {
+//		return new String[] {"redirect:http://52.78.66.0:9000/logout"};
+//	}
 	public String[] logout() {
 		return new String[] {"redirect:http://auth-server:9000/logout"};
 	}
 }
+
+
+

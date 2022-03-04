@@ -38,7 +38,7 @@ public class ResourceServerConfig {
 		http
 			.mvcMatcher("/messages/**")
 				.authorizeRequests()
-					.mvcMatchers("/messages/**").access("hasAuthority('SCOPE_message.read')")
+					.mvcMatchers("/messages/**").access("hasAnyAuthority('SCOPE_message.read', 'SCOPE_subs.search')")
 					.and()
 			.oauth2ResourceServer()
 				.jwt();

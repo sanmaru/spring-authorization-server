@@ -14,4 +14,6 @@ spring:
     oauth2:
       resourceserver:
         jwt:
+#          issuer-uri: http://52.78.66.0:9000
+#          issuer-uri: http://127.0.0.1:9000
           issuer-uri: http://auth-server:9000
